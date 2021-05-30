@@ -20,6 +20,8 @@ apps_path = os.path.join(BASE_DIR, 'apps')
 sys.path.insert(0, apps_path)
 
 AUTH_USER_MODEL = 'users.User'
+# 指定自定义的用户认证后端:
+AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileAuthBackend']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 

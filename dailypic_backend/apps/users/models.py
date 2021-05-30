@@ -11,6 +11,9 @@ class User(AbstractUser, BaseModel):
     mobile = models.CharField(max_length=11,
                               unique=True,
                               verbose_name='手机号')
+    avatar = models.CharField(max_length=255,
+                              null=True,
+                              verbose_name='头像')
 
     # 对当前表进行相关设置
     class Meta:
