@@ -216,3 +216,8 @@ CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGIN_REGEXES = [
 #     r"\w+",
 # ]
+
+# FDFS需要的配置文件路径(即: client.conf文件绝对路径).
+FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
+# FDFS中storage和tracker位置.端口规定死是8888, ip换成自己的ip
+FDFS_URL = 'http://192.168.168.128:8888/'

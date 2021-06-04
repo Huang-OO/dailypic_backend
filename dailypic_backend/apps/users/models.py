@@ -14,6 +14,9 @@ class User(AbstractUser, BaseModel):
     avatar = models.CharField(max_length=255,
                               null=True,
                               verbose_name='头像')
+    sign = models.CharField(max_length=255,
+                            null=True,
+                            verbose_name='个性签名')
 
     # 对当前表进行相关设置
     class Meta:

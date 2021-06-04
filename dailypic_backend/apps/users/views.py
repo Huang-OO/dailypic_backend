@@ -6,7 +6,8 @@ import re
 import json
 import logging
 logger = logging.getLogger('django')
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
+
 
 # Create your views here.
 
@@ -189,3 +190,104 @@ class LoginView(View):
             'errmsg': 'ok'
         })
 
+
+class LogoutView(View):
+    def delete(self, request):
+        """实现退出登录逻辑"""
+
+        # 清理 session
+        logout(request)
+
+        # 创建 response 对象.
+        response = JsonResponse({'code': 2000,
+                                 'errmsg': 'ok'})
+
+        # 调用对象的 delete_cookie 方法, 清除cookie
+        # response.delete_cookie('username')
+
+        # 返回响应
+        return response
+
+
+class UserInfoView(View):
+    def get(self, request, user_id):
+        user_query = User.objects.get(id=user_id)
+        user_info = {
+            'id': user_query.id,
+            'username': user_query.username,
+            'avatar': user_query.avatar,
+            'mobile': user_query.mobile,
+            'sign': user_query.sign
+        }
+
+        return JsonResponse({
+            'code': 2000,
+            'user_info': user_info,
+            'errmsg': 'ok'
+        })
+
+    def put(self, request, user_id):
+        data = json.loads(request.body.decode())
+        username = data.get('username')
+        avatar = data.get('avatar')
+        mobile = data.get('mobile')
+        sign = data.get('sign')
+
+        if not all([username, mobile]):
+            return JsonResponse({
+                'code': 400,
+                'errmsg': '用户名手机号为必填参数!'
+            })
+
+        try:
+            user_count = User.objects.filter(username=username).exclude(id=user_id).count()
+            mobile_count = User.objects.filter(mobile=mobile).exclude(id=user_id).count()
+
+            if user_count > 0:
+                return JsonResponse({
+                    'code': 400,
+                    'errmsg': '用户名已存在'
+                })
+            if mobile_count > 0:
+                return JsonResponse({
+                    'code': 400,
+                    'errmsg': '手机号已存在'
+                })
+        except Exception as e:
+            logger.error(e)
+            return JsonResponse({
+                'code': 400,
+                'errmsg': '查询数据库错误'
+            })
+
+        # username 校验
+        if not re.match(r'^[a-zA-Z0-9]{3,20}$', username):
+            return JsonResponse({
+                'code': 400,
+                'errmsg': 'username格式有误'
+            })
+
+        # 校验mobile
+        if not re.match(r'^1[3-9]\d{9}$', mobile):
+            return JsonResponse({
+                'code': 400,
+                'errmsg': 'mobile格式有误'
+            })
+
+        try:
+            User.objects.filter(id=user_id).update(
+                username=username,
+                mobile=mobile,
+                sign=sign,
+                avatar=avatar)
+        except Exception as e:
+            logger.error(e)
+            return JsonResponse({
+                'code': 400,
+                'errmsg': '数据库更新失败'
+            })
+
+        return JsonResponse({
+            'code': 2000,
+            'msg': '修改成功'
+        })
