@@ -23,3 +23,11 @@ class UploadImage(View):
                 'code': 400,
                 'errmsg': '上传图片失败!'
             })
+
+    def get(self, request):
+        return JsonResponse({
+            'state': 'SUCCESS',
+            'list': [],
+            "start": 1,  # 为请求参数start，会根据滚动条变化，变化值为 start+=size
+            "totle": 1
+        })

@@ -48,7 +48,13 @@ INSTALLED_APPS = [
     # 用户模块应用
     'users',
     # 验证模块
-    'verifications'
+    'verifications',
+    # 工具模块
+    'tools',
+    # 作品模块
+    'works',
+    # 吐槽
+    'topic'
 ]
 
 MIDDLEWARE = [

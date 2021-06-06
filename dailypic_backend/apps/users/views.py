@@ -5,6 +5,9 @@ from users.models import User
 import re
 import json
 import logging
+
+from works.models import WorkImg
+
 logger = logging.getLogger('django')
 from django.contrib.auth import login, authenticate, logout
 
@@ -290,4 +293,31 @@ class UserInfoView(View):
         return JsonResponse({
             'code': 2000,
             'msg': '修改成功'
+        })
+
+
+class UserWorks(View):
+    def get(self, request, user_id):
+        try:
+            work_queries = WorkImg.objects.filter(user_id=user_id).select_related('user').all()
+        except Exception as e:
+            logger.error(e)
+            return JsonResponse({
+                'code': 400,
+                'errmsg': '查询数据库失败'
+            })
+
+        work_list = []
+        for query in work_queries:
+            work_list.append({
+                'id': query.id,
+                'url': query.url,
+                'avatar': query.user.avatar,
+                'user_name': query.user.username,
+                'describe': query.describe
+            })
+
+        return JsonResponse({
+            'code': 2000,
+            'work_list': work_list
         })

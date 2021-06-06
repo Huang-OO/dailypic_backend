@@ -8,5 +8,6 @@ urlpatterns = [
     re_path(r'^register$', views.RegisterView.as_view()),
     re_path(r'^login$', views.LoginView.as_view()),
     re_path(r'^logout$', views.LogoutView.as_view()),
-    re_path(r'^user/(?P<user_id>\d)$', views.UserInfoView.as_view())
+    re_path(r'^user/(?P<user_id>\d)$', views.UserInfoView.as_view()),
+    re_path(r'^user/works/(?P<user_id>\d)$', views.UserWorks.as_view()),
 ]

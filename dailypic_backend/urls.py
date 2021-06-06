@@ -21,4 +21,6 @@ urlpatterns = [
     path(r'', include('users.urls')),
     path(r'', include('verifications.urls')),
     path(r'', include('tools.urls')),
+    path(r'', include('works.urls')),
+    path(r'', include('topic.urls'))
 ]
